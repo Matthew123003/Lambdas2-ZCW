@@ -1,8 +1,9 @@
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Person {
+public class Person implements CheckPerson{
 
     public enum Sex {
         MALE, FEMALE
@@ -52,17 +53,30 @@ public class Person {
         this.emailAddress = emailAddress;
     }
 
-    private int getAge() {
-        return 0;
+    private int getAge(LocalDate birthday) {
+        //Create instance of local date that is instantiated with today date using LocalDate.now()
+        LocalDate curDate = LocalDate.now();
+        if(birthday == null){
+            throw new IllegalArgumentException("Birthday cannot be null");
+        }
+        if(curDate.isBefore(birthday)){
+            throw new IllegalArgumentException("Birthday cannot be in the future");
+        }
+        return Period.between(birthday, curDate).getYears();
     }
 
     public void printPerson(){
 
     }
 
-    public static void printPersonsOlderThan(List<Person> roster, int age) {
+    @Override
+    public boolean test(Person p) {
+        return true;
+    }
+
+    public static void printPersons(List<Person> roster, CheckPerson tester) {
         for (Person p : roster) {
-            if (p.getAge() >= age) {
+            if (tester.test(p)) {
                 p.printPerson();
             }
         }

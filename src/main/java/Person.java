@@ -12,13 +12,14 @@ public class Person implements CheckPerson{
     LocalDate birthday;
     Sex gender;
     String emailAddress;
-    List<Person> roster = new ArrayList<>();
+    private static List<Person> roster = new ArrayList<>();
 
     public Person(String name, LocalDate birthday, Sex gender, String emailAddress){
         this.name = name;
         this.birthday = birthday;
         this.gender = gender;
         this.emailAddress = emailAddress;
+        roster.add(this);
     }
 
     public String getName() {
@@ -53,7 +54,7 @@ public class Person implements CheckPerson{
         this.emailAddress = emailAddress;
     }
 
-    private int getAge(LocalDate birthday) {
+    int getAge(LocalDate birthday) {
         //Create instance of local date that is instantiated with today date using LocalDate.now()
         LocalDate curDate = LocalDate.now();
         if(birthday == null){
@@ -64,7 +65,11 @@ public class Person implements CheckPerson{
         }
         return Period.between(birthday, curDate).getYears();
     }
-    
+
+    public List<Person> getRoster() {
+        return roster;
+    }
+
     @Override
     public boolean test(Person p) {
         return true;
@@ -83,32 +88,32 @@ public class Person implements CheckPerson{
         System.out.println(name + " - Age: " + getAge(birthday) + " - Gender: " + gender);
     }
 
-    class CheckPersons implements CheckPerson{
+    static class CheckPersonsAge implements CheckPerson{
 
         @Override
         public boolean test(Person p) {
-            return p.getAge(birthday) >= 18 && p.getAge(birthday) <= 25 && p.gender == Person.Sex.MALE;
+            return p.getAge(p.getBirthday()) >= 18 && p.getAge(p.getBirthday()) <= 25 && p.gender == Person.Sex.MALE;
         }
 
-        printPersons1(roster, new CheckPersons());//This is the last part of the local class
+//        printPersons1(roster, new CheckPersons());//This is the last part of the local class
 
-        printPersons2(//This is the start of the Anonymous class
-                roster, new CheckPerson() {
-            public boolean test(Person p) {
-                return p.getGender() == Person.Sex.MALE
-                        && p.getAge() >= 18
-                        && p.getAge() <= 25;
-            }
-        });
-
-        printPersons(//This is the start of Lambda expressions
-                roster, new CheckPerson() {
-            public boolean test(Person p) {
-                return p.getGender() == Person.Sex.MALE
-                        && p.getAge() >= 18
-                        && p.getAge() <= 25;
-            }
-        });
+//        printPersons2(//This is the start of the Anonymous class
+//                roster, new CheckPerson() {
+//            public boolean test(Person p) {
+//                return p.getGender() == Person.Sex.MALE
+//                        && p.getAge() >= 18
+//                        && p.getAge() <= 25;
+//            }
+//        });
+//
+//        printPersons(//This is the start of Lambda expressions
+//                roster, new CheckPerson() {
+//            public boolean test(Person p) {
+//                return p.getGender() == Person.Sex.MALE
+//                        && p.getAge() >= 18
+//                        && p.getAge() <= 25;
+//            }
+//        });
 
 
     }

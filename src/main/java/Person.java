@@ -64,15 +64,12 @@ public class Person implements CheckPerson{
         }
         return Period.between(birthday, curDate).getYears();
     }
-
-    public void printPerson(){
-
-    }
-
+    
     @Override
     public boolean test(Person p) {
         return true;
     }
+
 
     public static void printPersons(List<Person> roster, CheckPerson tester) {
         for (Person p : roster) {
@@ -82,6 +79,39 @@ public class Person implements CheckPerson{
         }
     }
 
+    private void printPerson() {
+        System.out.println(name + " - Age: " + getAge(birthday) + " - Gender: " + gender);
+    }
+
+    class CheckPersons implements CheckPerson{
+
+        @Override
+        public boolean test(Person p) {
+            return p.getAge(birthday) >= 18 && p.getAge(birthday) <= 25 && p.gender == Person.Sex.MALE;
+        }
+
+        printPersons1(roster, new CheckPersons());//This is the last part of the local class
+
+        printPersons2(//This is the start of the Anonymous class
+                roster, new CheckPerson() {
+            public boolean test(Person p) {
+                return p.getGender() == Person.Sex.MALE
+                        && p.getAge() >= 18
+                        && p.getAge() <= 25;
+            }
+        });
+
+        printPersons(//This is the start of Lambda expressions
+                roster, new CheckPerson() {
+            public boolean test(Person p) {
+                return p.getGender() == Person.Sex.MALE
+                        && p.getAge() >= 18
+                        && p.getAge() <= 25;
+            }
+        });
+
+
+    }
 
 
 }
